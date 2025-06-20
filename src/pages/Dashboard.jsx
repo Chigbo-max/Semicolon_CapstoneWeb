@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   useGenerateEnrollmentUrlQuery,
-  useGetDeviceMetaDataQuery
+  useGetDeviceMetaDataQuery,
+  useGetAllDevicesQuery,
 } from '../services/androidAntiTheftApi';
 import Sidebar from '../components/reusables/Sideba';
 import { Plus, CheckCircle, AlertCircle } from "lucide-react";
@@ -10,41 +11,38 @@ import DeviceDetails from "./DeviceDetails";
 import CommandActions from '../components/CommandActions';
 import { Link } from 'react-router-dom';
 
-const devices = [
-  {
-    deviceId: 'test-device-001',
-    model: 'Samsung Galaxy S25',
-    simIccidSlot0: 'ICCID_9876543210',
-    latitude: 6.5350517,
-    longitude: 3.3424326,
-    lastSeen: '3 minutes ago',
-    isStolen: false,
-    status: 'unlocked',
-  },
-  {
-    id: 'device-456',
-    model: 'Pixel 9 Pro',
-    simIccidSlot0: 'ICCID_1234567890',
-    latitude: 6.5244,
-    longitude: 3.3792,
-    lastSeen: '1 hour ago',
-    isStolen: true,
-    status: 'locked',
-  },
-];
+// const devices = [
+//   {
+//     deviceId: 'test-device-001',
+//     model: 'Samsung Galaxy S25',
+//     simIccidSlot0: 'ICCID_9876543210',
+//     latitude: 6.5350517,
+//     longitude: 3.3424326,
+//     lastSeen: '3 minutes ago',
+//     isStolen: false,
+//     status: 'unlocked',
+//   },
+//   {
+//     id: 'device-456',
+//     model: 'Pixel 9 Pro',
+//     simIccidSlot0: 'ICCID_1234567890',
+//     latitude: 6.5244,
+//     longitude: 3.3792,
+//     lastSeen: '1 hour ago',
+//     isStolen: true,
+//     status: 'locked',
+//   },
+// ];
 
 function Dashboard() {
   const { data: enrollmentData } = useGenerateEnrollmentUrlQuery();
+  const {data: devices = [], isLoading: isDevicesLoading, isError: isDevicesError } = useGetDeviceMetaDataQuery();
+  console.log("All devices: ", Array.isArray(devices)? devices : devices?.data);
 
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
-  console.log("Selected device: ", selectedDevice);
-  const { data: deviceMetaData, isLoading, isError } = useGetDeviceMetaDataQuery(
-  selectedDevice?.deviceId, {
-    skip: !selectedDevice || !selectedDevice.deviceId,
-});
-console.log("Error fetching device metadata: ", isError);
- console.log("Device data: ", deviceMetaData);
+  
+
 
   //   const {
   //   data: deviceDetails,
@@ -127,7 +125,7 @@ console.log("Error fetching device metadata: ", isError);
                 <div className="space-y-3 mb-6">
                   <div className="bg-slate-700/30 p-3 rounded-lg">
                     <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">
-                      Last Known SIM
+                      IMEI
                     </p>
                     <p className="text-sm font-mono text-slate-200 break-all">
                       {device.simIccidSlot0}

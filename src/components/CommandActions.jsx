@@ -3,6 +3,7 @@ import {
     useLockDeviceMutation,
     useWipeDeviceMutation,
     useReportTheftMutation,
+    useGetDeviceMetaDataQuery,
 } from '../services/androidAntiTheftApi';
 import { MdLock, MdDeleteForever, MdLockOpen, MdReportProblem, MdMyLocation, MdLayers } from 'react-icons/md';
 import { toast } from 'sonner';
@@ -20,7 +21,13 @@ const deviceIcon = new L.Icon({
     popupAnchor: [0, -40],
 });
 
+
+
 const CommandActions = ({ device }) => {
+
+    const { data: deviceMetaData = [], isLoading: isMetaDataLoading } = useGetDeviceMetaDataQuery();
+
+    const deviceId = deviceMetaData[0]?.deviceId;
     const [modalOpen, setModalOpen] = useState(false);
     const [actionType, setActionType] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -29,7 +36,9 @@ const CommandActions = ({ device }) => {
 
     const [lockDevice] = useLockDeviceMutation();
     const [wipeDevice] = useWipeDeviceMutation();
-    const [reportTheft] = useReportTheftMutation();
+    const [reportTheft] = useReportTheftMutation(deviceId);
+
+
 
     const tileLayerOptions = {
         detailed: {
@@ -102,7 +111,7 @@ const CommandActions = ({ device }) => {
     return (
         <>
             <div className="flex flex-wrap gap-2">
-                { (
+                {(
                     <button
                         onClick={() => handleAction('lock')}
                         className="flex-1 bg-gradient-to-r from-blue-600/20 to-blue-700/20 hover:from-blue-600/30 hover:to-blue-700/30 border border-blue-500/30 px-3 py-2 text-sm rounded flex items-center disabled:opacity-50"
@@ -204,8 +213,8 @@ const CommandActions = ({ device }) => {
                                         key={type}
                                         onClick={() => setMapType(type)}
                                         className={`px-3 py-1 text-xs rounded transition-colors ${mapType === type
-                                                ? 'bg-indigo-600 text-white'
-                                                : 'text-gray-300 hover:text-white'
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'text-gray-300 hover:text-white'
                                             }`}
                                     >
                                         {type.charAt(0).toUpperCase() + type.slice(1)}

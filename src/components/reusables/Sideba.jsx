@@ -1,21 +1,26 @@
 import { useState } from 'react';
 import { Menu, X, Home, Users, Shield, Settings, ChevronRight } from 'lucide-react';
+import { useGetDeviceMetaDataQuery } from '../../services/androidAntiTheftApi';
+
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: devices = [], isLoading: isDevicesLoading, isError: isDevicesError } = useGetDeviceMetaDataQuery();
+  console.log("sidebar device", devices);
 
-  const device = {
-    id: 'device-123',
-    model: 'Samsung Galaxy S25',
-    simIccidSlot0: 'ICCID_9876543210',
-    location: '',
-    lastSeen: '2 minutes ago',
-    isStolen: false,
-  };
+
+  // const device = {
+  //   id: 'device-123',
+  //   model: 'Samsung Galaxy S25',
+  //   simIccidSlot0: 'ICCID_9876543210',
+  //   location: '',
+  //   lastSeen: '2 minutes ago',
+  //   isStolen: false,
+  // };
 
   const navigationItems = [
     { icon: Home, label: 'Dashboard', href: '/dashboard' },
-    { icon: Users, label: 'Trusted Contacts', href: `/trustedContacts/${device.id}` },
+    { icon: Users, label: 'Trusted Contacts', href: `/trustedContacts/${devices.id}` },
     { icon: Shield, label: 'Security', href: '/security' },
     { icon: Settings, label: 'Settings', href: '/settings' },
   ];
@@ -31,9 +36,8 @@ export default function Sidebar() {
       </button>
 
       <div
-        className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-40 transform transition-all duration-300 ease-in-out shadow-2xl ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 md:static md:block border-r border-slate-700/50`}
+        className={`fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white z-40 transform transition-all duration-300 ease-in-out shadow-2xl ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0 md:static md:block border-r border-slate-700/50`}
       >
         <div className="flex justify-between items-center px-6 py-5 border-b border-slate-700/50 bg-gradient-to-r from-blue-600/10 to-purple-600/10 md:justify-center">
           <div className="flex items-center space-x-3">
@@ -59,8 +63,16 @@ export default function Sidebar() {
               <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-emerald-400">Device Online</span>
             </div>
-            <p className="text-xs text-slate-300 mb-1">{device.model}</p>
-            <p className="text-xs text-slate-400">Last seen: {device.lastSeen}</p>
+            <div>{
+              devices.map((device, index) => {
+                return(
+                <div key={index}>
+                  <p className="text-xs text-slate-300 mb-1">{device.model}</p>
+                  <p className="text-xs text-slate-400">Last seen: {device.lastSeen}</p>
+                </div>
+                )
+              })}
+            </div>
           </div>
 
 
@@ -94,7 +106,7 @@ export default function Sidebar() {
             </div>
             <div>
               <p className="text-sm font-medium text-white">User Account</p>
-              <p className="text-xs text-slate-400">Premium Plan</p>
+              <p className="text-xs text-slate-400">Free Plan</p>
             </div>
           </div>
         </div>

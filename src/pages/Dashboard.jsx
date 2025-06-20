@@ -56,8 +56,8 @@ function Dashboard() {
     [
 
       {
-        id: 'device-001',
-        model: 'Samsung Galaxy S25',
+        id: 'test-device-001',
+        model: 'Infinix X650B',
         manufacturer: 'Samsung',
         serialNumber: 'SN123456789',
         imei: 'IMEI9876543210',
@@ -154,8 +154,8 @@ function Dashboard() {
                   <button
                     onClick={
                       () => {
-                        const fullDetails = deviceDetails.find(d => d.id === device.id);
-
+                        // const fullDetails = deviceDetails.find(d => d.id === device.id);
+                            const fullDetails = deviceDetails[0];
                         setSelectedDevice(fullDetails);
                       }}
                     className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"

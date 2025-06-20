@@ -36,7 +36,7 @@ const CommandActions = ({ device }) => {
 
     const [lockDevice] = useLockDeviceMutation();
     const [wipeDevice] = useWipeDeviceMutation();
-    const [reportTheft] = useReportTheftMutation(deviceId);
+    const [reportTheft] = useReportTheftMutation();
 
 
 
@@ -78,13 +78,8 @@ const CommandActions = ({ device }) => {
                 await wipeDevice(device.deviceId).unwrap();
                 toast.success('Wipe command sent successfully.');
             } else if (actionType === 'reportTheft') {
-                const payload = {
-                    deviceId: device.id,
-                    latitude: device.latitude.toString(),
-                    longitude: device.longitude.toString(),
-                    simSerial: device.simIccidSlot0 || 'UNKNOWN',
-                };
-                await reportTheft(payload).unwrap();
+             
+                await reportTheft(device.deviceId).unwrap();
                 toast.success('Theft report submitted successfully.');
             }
         } catch (err) {

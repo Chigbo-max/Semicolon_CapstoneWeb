@@ -45,64 +45,67 @@ export const androidAntiTheftApi = createApi({
         }),
 
         reportTheft: builder.mutation({
-            query: ({ deviceId }) => ({
+            query: (deviceId) => ({
                 url: `api/v1/theft/report`,
                 method: 'POST',
-                body: deviceId,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'deviceId': deviceId,
+                },
             })
         }),
 
-        //contacts
-        addTrustedContact: builder.mutation({
-            query: ({ deviceId, contact }) => ({
-                url: `api/v1/trusted-contact/add/${deviceId}`,
-                method: 'POST',
-                body: contact,
-            })
-        }),
-
-        deleteTrustedContact: builder.mutation({
-            query: ({ deviceId, contact }) => ({
-                url: `api/v1/trusted-contact/delete/${deviceId}`,
-                method: 'DELETE',
-                body: {
-                    email: contact.email
-                }
-            })
-        }),
-
-        getTrustedContacts: builder.query({
-            query: (deviceId) => `api/v1/trusted-contact/${deviceId}`,
-        }),
-
-        updateTrustedContact: builder.mutation({
-            query: ({ deviceId, contact }) => ({
-                url: `/devices/${deviceId}/contacts`,
-                method: 'PUT',
-                body: contact,
+            //contacts
+            addTrustedContact: builder.mutation({
+                query: ({ deviceId, contact }) => ({
+                    url: `api/v1/trusted-contact/add/${deviceId}`,
+                    method: 'POST',
+                    body: contact,
+                })
             }),
+
+            deleteTrustedContact: builder.mutation({
+                query: ({ deviceId, contact }) => ({
+                    url: `api/v1/trusted-contact/delete/${deviceId}`,
+                    method: 'DELETE',
+                    body: {
+                        email: contact.email
+                    }
+                })
+            }),
+
+            getTrustedContacts: builder.query({
+                query: (deviceId) => `api/v1/trusted-contact/${deviceId}`,
+            }),
+
+            updateTrustedContact: builder.mutation({
+                query: ({ deviceId, contact }) => ({
+                    url: `/devices/${deviceId}/contacts`,
+                    method: 'PUT',
+                    body: contact,
+                }),
+            }),
+
+
+
         }),
-
-
-
-    }),
-})
+    })
 
 
 
 export const {
-    useGetAllDevicesQuery,
-    useUpdateTrustedContactMutation,
-    useGenerateEnrollmentUrlQuery,
-    useGetDeviceDetailsQuery,
-    useGetDeviceMetaDataQuery,
-    useGetDeviceLocationQuery,
-    useLockDeviceMutation,
-    useWipeDeviceMutation,
-    useAddTrustedContactMutation,
-    useDeleteTrustedContactMutation,
-    useGetTrustedContactsQuery,
-    useReportTheftMutation
+        useGetAllDevicesQuery,
+        useUpdateTrustedContactMutation,
+        useGenerateEnrollmentUrlQuery,
+        useGetDeviceDetailsQuery,
+        useGetDeviceMetaDataQuery,
+        useGetDeviceLocationQuery,
+        useLockDeviceMutation,
+        useWipeDeviceMutation,
+        useAddTrustedContactMutation,
+        useDeleteTrustedContactMutation,
+        useGetTrustedContactsQuery,
+        useReportTheftMutation
 
-} = androidAntiTheftApi
+    } = androidAntiTheftApi
 

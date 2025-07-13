@@ -26,7 +26,7 @@ export const androidAntiTheftApi = createApi({
         }),
 
         getDeviceLocation: builder.query({
-            query: (deviceId) => `api/v1/device/location/${deviceId}`,
+            query: (deviceId) => `api/v1/device/location_/${deviceId}`,
         }),
 
         //commands

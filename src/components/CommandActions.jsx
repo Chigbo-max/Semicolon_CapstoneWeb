@@ -11,7 +11,6 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import ResetViewButton from '../components/ResetviewButton';
-// import { formatDistanceToNow } from 'date-fns';
 
 
 const deviceIcon = new L.Icon({
@@ -240,7 +239,7 @@ const CommandActions = ({ device }) => {
                                             <div><strong>Device:</strong> {device?.deviceName || 'Unknown'}</div>
                                             <div><strong>Latitude:</strong> {device?.latitude.toFixed(6)}</div>
                                             <div><strong>Longitude:</strong> {device?.longitude.toFixed(6)}</div>
-                                            {/* <div><strong>Last Seen:</strong> {formatDistanceToNow(new Date(device?.lastSeen))} ago</div> */}
+
                                         </div>
                                     </Popup>
                                 </Marker>

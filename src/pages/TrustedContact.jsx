@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   useGetTrustedContactsQuery,
   useAddTrustedContactMutation,
@@ -15,8 +16,8 @@ import Sidebar from '../components/reusables/Sideba';
 import { toast } from 'sonner';
 
 export default function TrustedContact() {
+  const { deviceId } = useParams();
   const { data: deviceMetaData = [], isLoading: isMetaDataLoading } = useGetDeviceMetaDataQuery();
-  const deviceId = deviceMetaData[0]?.deviceId;
 
   const { data: contacts = [], isLoading, refetch } = useGetTrustedContactsQuery(deviceId);
 
@@ -66,10 +67,10 @@ export default function TrustedContact() {
     setLoading(true);
     try {
       if (actionType === 'delete') {
-        await deleteContact({ deviceId, contact: { email: contactToActOn.email } }).unwrap();
+        await deleteContact({ deviceId, contactId: contactToActOn.id }).unwrap();
         toast.success('Contact deleted successfully');
       } else if (actionType === 'edit') {
-        await updateContact({ deviceId, contact: editForm }).unwrap();
+        await updateContact({ deviceId, contactId: contactToActOn.id, contact: editForm }).unwrap();
         toast.success('Contact updated successfully');
       }
 
@@ -126,7 +127,7 @@ export default function TrustedContact() {
                       className="w-full mb-2 bg-gray-700 p-2 rounded"
                       value={editForm.phoneNumber}
                       onChange={(e) =>
-                        setEditForm({ ...editForm, phone: e.target.value })
+                        setEditForm({ ...editForm, phoneNumber: e.target.value })
                       }
                       placeholder="Phone"
                     />
@@ -139,7 +140,7 @@ export default function TrustedContact() {
                       placeholder="Email"
                     />
                     <button
-                      onClick={() => confirmEdit({ ...contact, phoneNumber: editForm.phoneNumber })}
+                      onClick={() => handleConfirm()}
                       className="bg-yellow-600 hover:bg-yellow-500 px-3 py-1 rounded mr-2"
                     >
                       <MdSave className="inline mr-1" /> Confirm Edit
@@ -204,9 +205,10 @@ export default function TrustedContact() {
             />
             <input
               type="email"
-              placeholder="Email (optional)"
+              placeholder="Email Address"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
               className="w-full p-3 mb-4 bg-gray-700 text-white rounded"
             />
 

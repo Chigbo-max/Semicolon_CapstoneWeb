@@ -18,7 +18,7 @@ export const androidAntiTheftApi = createApi({
         }),
 
         getDeviceDetails: builder.query({
-            query: (deviceId) => `api/v1/device/deviceDetails/${deviceId}`,
+            query: (deviceId) => `api/v1/device/details/${deviceId}`,
         }),
 
         getDeviceMetaData: builder.query({
@@ -26,7 +26,7 @@ export const androidAntiTheftApi = createApi({
         }),
 
         getDeviceLocation: builder.query({
-            query: (deviceId) => `api/v1/device/location_/${deviceId}`,
+            query: (deviceId) => `api/v1/device/location/${deviceId}`,
         }),
 
         //commands
@@ -50,7 +50,12 @@ export const androidAntiTheftApi = createApi({
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'deviceId': deviceId,
+                },
+                body: {
+                    deviceId: deviceId,
+                    simSerial: '',
+                    latitude: '',
+                    longitude: ''
                 },
             })
         }),
@@ -58,19 +63,16 @@ export const androidAntiTheftApi = createApi({
             //contacts
             addTrustedContact: builder.mutation({
                 query: ({ deviceId, contact }) => ({
-                    url: `api/v1/trusted-contact/add/${deviceId}`,
+                    url: `api/v1/trusted-contact/${deviceId}/contacts`,
                     method: 'POST',
                     body: contact,
                 })
             }),
 
             deleteTrustedContact: builder.mutation({
-                query: ({ deviceId, contact }) => ({
-                    url: `api/v1/trusted-contact/delete/${deviceId}`,
+                query: ({ deviceId, contactId }) => ({
+                    url: `api/v1/trusted-contact/${deviceId}/${contactId}`,
                     method: 'DELETE',
-                    body: {
-                        email: contact.email
-                    }
                 })
             }),
 
@@ -79,8 +81,8 @@ export const androidAntiTheftApi = createApi({
             }),
 
             updateTrustedContact: builder.mutation({
-                query: ({ deviceId, contact }) => ({
-                    url: `/devices/${deviceId}/contacts`,
+                query: ({ deviceId, contactId, contact }) => ({
+                    url: `api/v1/trusted-contact/${deviceId}/${contactId}`,
                     method: 'PUT',
                     body: contact,
                 }),

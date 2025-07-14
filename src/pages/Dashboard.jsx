@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   useGenerateEnrollmentUrlQuery,
   useGetDeviceMetaDataQuery,
-  useGetAllDevicesQuery,
-  useGetDeviceDetailsQuery,
 } from '../services/androidAntiTheftApi';
 import Sidebar from '../components/reusables/Sideba';
 import { Plus, CheckCircle, AlertCircle } from "lucide-react";
@@ -15,7 +13,6 @@ import { Link } from 'react-router-dom';
 function Dashboard() {
   const { data: enrollmentData } = useGenerateEnrollmentUrlQuery();
   const { data: devices = [], isLoading: isDevicesLoading, isError: isDevicesError } = useGetDeviceMetaDataQuery();
-  console.log("All devices: ", devices);
 
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false);
   const [selectedDevice, setSelectedDevice] = useState(null);
@@ -53,7 +50,7 @@ function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {devices.map((device) => (
               <div
-                key={device.id}
+                key={device.deviceId}
                 className="group bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm p-6 rounded-2xl shadow-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -80,7 +77,7 @@ function Dashboard() {
                     </div>
                     <div className="bg-slate-700/30 p-3 rounded-lg">
                       <p className="text-xs text-slate-400 uppercase tracking-wider mb-1">IMEI</p>
-                      <p className="text-sm font-mono text-slate-200 break-all">{device.simIccidSlot0}</p>
+                      <p className="text-sm font-mono text-slate-200 break-all">{device.imei || 'N/A'}</p>
                     </div>
                     <div className="flex justify-between items-center">
                       <div>
@@ -99,7 +96,7 @@ function Dashboard() {
                 <div className="flex flex-wrap gap-2">
                   <button
                       onClick={() => {
-                        setSelectedDevice(device.id);
+                        setSelectedDevice(device.deviceId);
                       }}
                     className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/25"
                   >
@@ -107,7 +104,7 @@ function Dashboard() {
                   </button>
                     <button className="flex-1 bg-slate-700/50 hover:bg-slate-600/50 px-4 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg border border-slate-600/50 hover:border-slate-500/50">
                     <Plus size={16} className="text-purple-400" />
-                      <Link to={`/trustedContacts/${device.id}`}>Contacts</Link>
+                      <Link to={`/trustedContacts/${device.deviceId}`}>Contacts</Link>
                   </button>
                 </div>
 
@@ -126,9 +123,11 @@ function Dashboard() {
             </div>
           )}
 
+          {/* Enroll New Device Button - Always visible */}
+          <div className="mt-8">
             <div
               onClick={() => setShowEnrollmentModal(true)}
-              className="group bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-sm p-6 rounded-2xl shadow-xl border-2 border-dashed border-blue-500/30 hover:border-blue-400/50 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 min-h-[320px]"
+              className="group bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-sm p-6 rounded-2xl shadow-xl border-2 border-dashed border-blue-500/30 hover:border-blue-400/50 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 min-h-[200px]"
               aria-label="Enroll New Device"
               role="button"
               tabIndex={0}
@@ -143,6 +142,7 @@ function Dashboard() {
               <p className="text-slate-400 text-sm text-center px-4">
                 Add a new device to your security network
               </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
